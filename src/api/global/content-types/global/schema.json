@@ -1,0 +1,40 @@
+{
+  "kind": "singleType",
+  "collectionName": "globals",
+  "info": {
+    "singularName": "global",
+    "pluralName": "globals",
+    "displayName": "Global"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "header_menu": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::menu.menu"
+    },
+    "heroBanner": {
+      "type": "component",
+      "component": "section.hero-banner",
+      "repeatable": false
+    },
+    "block": {
+      "type": "dynamiczone",
+      "components": [
+        "section.introduction-section",
+        "section.service-section",
+        "section.case-study-section",
+        "section.client-section"
+      ]
+    }
+  }
+}

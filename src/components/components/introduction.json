@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_components_introductions",
+  "info": {
+    "displayName": "Introduction"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "subHeading": {
+      "type": "blocks"
+    },
+    "ctaDiscoverMore": {
+      "type": "component",
+      "component": "shared.link",
+      "repeatable": false
+    },
+    "virtualHeading": {
+      "type": "string"
+    },
+    "virtualElement": {
+      "type": "component",
+      "component": "components.virtual-element",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

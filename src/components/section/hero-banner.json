@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_section_hero_banners",
+  "info": {
+    "displayName": "HeroBanner"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "backgroundMedia": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "slogan": {
+      "type": "text"
+    },
+    "primaryCTA": {
+      "type": "component",
+      "component": "shared.link",
+      "repeatable": false
+    },
+    "secondaryCTA": {
+      "type": "component",
+      "component": "shared.link",
+      "repeatable": false
+    },
+    "card": {
+      "type": "component",
+      "component": "shared.card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

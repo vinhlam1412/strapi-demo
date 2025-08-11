@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_section_introduction_sections",
+  "info": {
+    "displayName": "Introduction Section",
+    "icon": "message"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "introduction": {
+      "type": "component",
+      "component": "components.introduction",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}
