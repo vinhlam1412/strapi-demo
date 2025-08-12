@@ -1,36 +1,44 @@
-# STAGE 1: Build
-FROM node:18-alpine AS build
+# ================================
+# 1. Stage: Build
+# ================================
+FROM node:18-alpine AS builder
+
+# Set working directory
 WORKDIR /opt/app
 
-# Copy package.json và package-lock.json
+# Copy package files trước (để tận dụng cache layer)
 COPY package*.json ./
 
-# Cài đặt dependencies cho production
-RUN npm ci --only=production
+# Install dependencies (bao gồm devDependencies để build TypeScript)
+RUN npm install
 
-# Copy toàn bộ mã nguồn
+# Copy toàn bộ source code
 COPY . .
 
-# Build Strapi
+# Build TypeScript sang JavaScript
 RUN npm run build
 
-# STAGE 2: Production
-FROM node:18-alpine
+# ================================
+# 2. Stage: Production
+# ================================
+FROM node:18-alpine AS runner
+
 WORKDIR /opt/app
 
-# Copy các dependencies đã cài đặt từ stage 'build'
-COPY --from=build /opt/app/node_modules ./node_modules
+# Copy package files trước
+COPY package*.json ./
 
-# Copy các file đã build và file cấu hình
-COPY --from=build /opt/app/package.json .
-COPY --from=build /opt/app/config ./config
-COPY --from=build /opt/app/database ./database
-COPY --from=build /opt/app/public ./public
-COPY --from=build /opt/app/src ./src
-COPY --from=build /opt/app/.strapi ./.strapi
+# Install production dependencies
+RUN npm install --omit=dev
 
-# Expose port mà Strapi chạy
+# Copy build output và các file cần thiết từ builder
+COPY --from=builder /opt/app/build ./build
+COPY --from=builder /opt/app/public ./public
+COPY --from=builder /opt/app/config ./config
+COPY --from=builder /opt/app/src ./src
+
+# Mở cổng Strapi
 EXPOSE 1337
 
-# Lệnh để khởi động ứng dụng
-CMD ["npm", "run", "start"]
+# Chạy Strapi production
+CMD ["npm", "start"]
