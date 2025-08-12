@@ -1,43 +1,29 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "lib": ["ES2020"],
-    "target": "ES2019",
-    "strict": false,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "incremental": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "noEmitOnError": true,
-    "noImplicitThis": true,
-    "outDir": "dist",
-    "rootDir": "."
+    "target": "ES2021",                 // Output JS version
+    "module": "CommonJS",               // Strapi backend dùng CommonJS
+    "outDir": "dist",                    // Nơi chứa file .js sau khi build
+    "rootDir": ".",                      // Thư mục gốc để compiler hiểu
+    "strict": true,                      // Bật strict type-checking
+    "esModuleInterop": true,             // Cho phép import default từ CommonJS
+    "resolveJsonModule": true,           // Import file .json
+    "skipLibCheck": true,                // Bỏ check type trong node_modules
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
-    // Include root files
-    "./",
-    // Include all ts files
-    "./**/*.ts",
-    // Include all js files
-    "./**/*.js",
-    // Force the JSON files in the src folder to be included
-    "src/**/*.json"
+    "src/**/*",
+    "config/**/*",
+    "scripts/**/*",
+    "database.ts",
+    "server.ts",
+    "admin.ts",
+    "plugins.ts",
+    "middlewares.ts"
   ],
-
   "exclude": [
-    "node_modules/",
-    "build/",
-    "dist/",
-    ".cache/",
-    ".tmp/",
-
-    // Do not include admin files in the server compilation
-    "src/admin/",
-    // Do not include test files
-    "**/*.test.*",
-    // Do not include plugins in the server compilation
-    "src/plugins/**"
+    "node_modules",
+    "build",         // Admin panel build output
+    "dist",          // Backend JS build output
+    "**/*.test.ts"
   ]
 }
