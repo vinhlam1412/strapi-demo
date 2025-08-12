@@ -1,37 +1,30 @@
-# Stage 1: Builder
-FROM node:18-alpine AS builder
+# Creating multi-stage build for production
+FROM node:22-alpine AS build
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev git > /dev/null 2>&1
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
+WORKDIR /opt/
+COPY package.json package-lock.json ./
+RUN npm install -g node-gyp
+RUN npm config set fetch-retry-maxtimeout 600000 -g && npm install --only=production
+ENV PATH=/opt/node_modules/.bin:$PATH
 WORKDIR /opt/app
-
-# Copy package.json và package-lock.json
-COPY package*.json ./
-
-# Install tất cả dependencies (kể cả dev)
-RUN npm install
-
-# Copy toàn bộ source code
 COPY . .
-
-# Build TypeScript + Admin
 RUN npm run build
 
-# Stage 2: Runner
-FROM node:18-alpine AS runner
-
+# Creating final production image
+FROM node:22-alpine
+RUN apk add --no-cache vips-dev
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+WORKDIR /opt/
+COPY --from=build /opt/node_modules ./node_modules
 WORKDIR /opt/app
+COPY --from=build /opt/app ./
+ENV PATH=/opt/node_modules/.bin:$PATH
 
-# Copy package.json
-COPY package*.json ./
-
-# Install dependencies production
-RUN npm install --omit=dev
-
-# Copy build output từ builder
-COPY --from=builder /opt/app/build ./build       # Admin panel
-COPY --from=builder /opt/app/dist ./dist         # Backend JS đã compile
-COPY --from=builder /opt/app/public ./public     # Static files
-
-# Mở port
+RUN chown -R node:node /opt/app
+USER node
 EXPOSE 1337
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
